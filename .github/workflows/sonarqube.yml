@@ -15,10 +15,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Build Project
-        run: mvn clean install
+        run:
+          mvn clean install
+          mvn sonar:sonar -Pcoverage
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: 'https://sonarcloud.io/'
-        run: mvn sonar:sonar -Pcoverage
