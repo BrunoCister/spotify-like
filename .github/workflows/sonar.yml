@@ -16,8 +16,7 @@ jobs:
           java-version: '21'
       - name: Build Project
         run:
-          mvn clean install
-          mvn verify
+          mvn clean verify
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master # Ex: v2.1.0, See the latest version at https://github.com/marketplace/actions/official-sonarqube-scan
         env:
