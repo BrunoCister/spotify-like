@@ -4,9 +4,9 @@ import java.util.UUID;
 
 public class MusicaResponse {
 
-    public UUID id;
-    public String nome;
-    public int duracao;
+    private UUID id;
+    private String nome;
+    private int duracao;
 
     public UUID getId() {
         return id;

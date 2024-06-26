@@ -5,9 +5,9 @@ import java.util.UUID;
 
 public class UsuarioRequest implements Serializable {
 
-    public UUID planoId;
-    public String nome;
-    public CartaoRequest cartao;
+    private UUID planoId;
+    private String nome;
+    private CartaoRequest cartao;
 
     public UUID getPlanoId() {
         return planoId;

@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class CartaoRequest implements Serializable {
 
-    public Boolean ativo;
-    public Double limite;
-    public String numero;
+    private Boolean ativo;
+    private Double limite;
+    private String numero;
 
     public Boolean getAtivo() {
         return ativo;

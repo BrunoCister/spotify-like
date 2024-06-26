@@ -21,6 +21,7 @@ public class UsuarioTest {
         usuario = new Usuario();
     }
 
+
     @Test
     public void deveCriarUmUsuarioComSucesso() throws Exception {
 

@@ -1,8 +1,6 @@
 package com.infnet.br.SpotifyLike;
 
-import com.infnet.br.SpotifyLike.application.conta.RabbitMQService;
 import com.infnet.br.SpotifyLike.application.conta.UsuarioService;
-//import com.infnet.br.SpotifyLike.consumer.UsuarioConsumer;
 import com.infnet.br.SpotifyLike.domain.conta.Playlist;
 import com.infnet.br.SpotifyLike.domain.conta.Usuario;
 import com.infnet.br.SpotifyLike.domain.exceptions.*;
@@ -28,10 +26,6 @@ public class UsuarioController {
 
     @Autowired
     UsuarioService usuarioService;
-    /*@Autowired
-    RabbitMQService rabbitMQService;
-    @Autowired
-    private UsuarioConsumer usuarioConsumer;*/
 
     @PostMapping
     public ResponseEntity<UsuarioResponse> criar(@RequestBody UsuarioRequest usuarioRequest) throws Exception {
@@ -51,8 +45,6 @@ public class UsuarioController {
         UsuarioResponse usuarioResponse = usuarioParaResponse(usuarioCriado);
 
         if (usuarioRequest != null) {
-            //rabbitMQService.enviarMensagem("usuario", usuarioRequest);
-            //usuarioConsumer.consumidor(usuarioRequest);
             return new ResponseEntity<>(usuarioResponse, HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -105,7 +97,7 @@ public class UsuarioController {
         UsuarioResponse response = new UsuarioResponse();
         response.setId(usuarioCriado.getId());
         response.setNome(usuarioCriado.getNome());
-        Assinatura assinaturaAtiva = usuarioCriado.getAssinaturas().stream().filter(assinatura -> assinatura.getAtivo()).findFirst().orElse(null);
+        Assinatura assinaturaAtiva = usuarioCriado.getAssinaturas().stream().filter(Assinatura::getAtivo).findFirst().orElse(null);
         if (assinaturaAtiva != null) {
             response.setPlanoId(assinaturaAtiva.getPlano().getId());
         } else {

@@ -52,21 +52,13 @@ public class UsuarioService {
 
         this.usuarioRepository.save(usuario);
 
-        /*Notificacao notificacao = new Notificacao();
-        notificacao.setIdUsuario(usuario.getId());
-        notificacao.setMensagem("Bem vindo " + usuario.getNome() + "!");
-
-        this.enviarMensagem("rmq.spotify", notificacao);*/
-
         return usuario;
 
     }
 
     public Usuario obterUsuario(UUID id) {
 
-        Usuario usuario = this.usuarioRepository.findById(id).get();
-
-        return usuario;
+        return this.usuarioRepository.findById(id).get();
     }
 
     public void favoritarMusica(UUID idUsuario, UUID idMusica) throws UsuarioNotFoundException, PlaylistNotFoundException, MusicaNotFoundException, IOException, URISyntaxException, InterruptedException {
@@ -103,9 +95,5 @@ public class UsuarioService {
             throw new MusicaNotFoundException(ExceptionMessages.MUSICA_NOT_FOUND);
         }
         return musica;
-    }
-
-    public void enviarMensagem(String nomeFila, Object mensagem) {
-        this.rabbitTemplate.convertAndSend(nomeFila, mensagem);
     }
 }

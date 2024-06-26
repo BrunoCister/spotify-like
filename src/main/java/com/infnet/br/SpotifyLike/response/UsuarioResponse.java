@@ -6,10 +6,10 @@ import java.util.UUID;
 
 public class UsuarioResponse {
 
-    public UUID id;
-    public String nome;
-    public UUID planoId;
-    public List<PlaylistResponse> playlists = new ArrayList<>();
+    private UUID id;
+    private String nome;
+    private UUID planoId;
+    private List<PlaylistResponse> playlists = new ArrayList<>();
 
     public UUID getId() {
         return id;

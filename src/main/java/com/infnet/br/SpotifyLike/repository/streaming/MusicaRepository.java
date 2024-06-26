@@ -33,6 +33,5 @@ public class MusicaRepository {
              }
              return musica;
          }).get();
-    };
-
+    }
 }

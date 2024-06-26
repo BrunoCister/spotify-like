@@ -14,7 +14,7 @@ public class Transacao {
     private Date dtTransicao;
     private Double valor;
     private String vendedor;
-    public String descricao;
+    private String descricao;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "cartao_id")
     private Cartao cartao;

@@ -12,10 +12,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 public class Usuario {
@@ -34,6 +31,8 @@ public class Usuario {
     @JsonIgnore
     private List<Assinatura> assinaturas = new ArrayList<>();
 
+    String nomePlaylistFavoritas = "Favoritas";
+
     public void criarUsuario(String nome, Plano plano, Cartao cartao) throws Exception {
 
         this.nome = nome;
@@ -46,7 +45,7 @@ public class Usuario {
 
         Playlist playlist = new Playlist();
         playlist.setId(UUID.randomUUID());
-        playlist.setNome("Favoritas");
+        playlist.setNome(nomePlaylistFavoritas);
         playlist.setPublica(false);
         playlist.setUsuario(this);
         List<Musica> musicas = new ArrayList<>();
@@ -63,8 +62,8 @@ public class Usuario {
 
         cartao.criarTransacao(plano.getNome(),plano.getDescricao(), plano.getValor());
 
-        if (this.assinaturas.stream().count() > 0 && this.assinaturas.stream().anyMatch(assinatura -> assinatura.getAtivo())) {
-            var planoAtivo = this.assinaturas.stream().filter(assinatura -> assinatura.getAtivo()).toList();
+        if ((long) this.assinaturas.size() > 0 && this.assinaturas.stream().anyMatch(Assinatura::getAtivo)) {
+            var planoAtivo = this.assinaturas.stream().filter(Assinatura::getAtivo).toList();
             planoAtivo.forEach(assinatura -> assinatura.setAtivo(false));
         }
 
@@ -80,34 +79,26 @@ public class Usuario {
 
     public void favoritarMusica(Musica musica) throws PlaylistNotFoundException {
 
-        Playlist playlist = this.playlists.stream().filter(p -> p.getNome().equals("Favoritas")).findFirst().get();
-        if (!playlist.getNome().equals("Favoritas")) {
-            throw new PlaylistNotFoundException(ExceptionMessages.PLAYLIST_NOT_FOUND);
+        Optional<Playlist> playlist = this.playlists.stream().filter(p -> p.getNome().equals(nomePlaylistFavoritas)).findFirst();
+        if (playlist.isPresent()){
+            if (!playlist.get().getNome().equals(nomePlaylistFavoritas)) {
+                throw new PlaylistNotFoundException(ExceptionMessages.PLAYLIST_NOT_FOUND);
+            }
+            playlist.get().getMusicas().add(musica);
         }
-        playlist.getMusicas().add(musica);
     }
 
     public void desfavoritarMusica(Musica musica) throws PlaylistNotFoundException, MusicaNotFoundException {
 
-        Playlist playlist = this.playlists.stream().filter(p -> p.getNome().equals("Favoritas")).findFirst().get();
-        if (!playlist.getNome().equals("Favoritas")) {
-            throw new PlaylistNotFoundException(ExceptionMessages.PLAYLIST_NOT_FOUND);
+        Optional<Playlist> playlist = this.playlists.stream().filter(p -> p.getNome().equals(nomePlaylistFavoritas)).findFirst();
+        if (playlist.isPresent()){
+            if (!playlist.get().getNome().equals(nomePlaylistFavoritas)) {
+                throw new PlaylistNotFoundException(ExceptionMessages.PLAYLIST_NOT_FOUND);
+            }
+
+            Optional<Musica> musicaFav = playlist.get().getMusicas().stream().filter(m -> m.getId().equals(musica.getId())).findFirst();
+            musicaFav.ifPresent(value -> playlist.get().getMusicas().removeIf(m -> m.getId().equals(value.getId())));
         }
-
-        /*Musica musicaFav = null;
-        try {
-            musicaFav = playlist.getMusicas().stream().filter(m -> m.getId().equals(musica.getId())).findFirst().get();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }*/
-
-        Musica musicaFav = playlist.getMusicas().stream().filter(m -> m.getId().equals(musica.getId())).findFirst().get();
-        if (musicaFav == null) {
-            throw  new MusicaNotFoundException(ExceptionMessages.MUSICA_NOT_FOUND);
-        }
-
-        //playlist.getMusicas().remove(musicaFav);
-        playlist.getMusicas().removeIf(m -> m.getId().equals(musicaFav.getId()));
     }
 
     public UUID getId() {
