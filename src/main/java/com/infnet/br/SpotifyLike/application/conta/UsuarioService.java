@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -55,8 +56,10 @@ public class UsuarioService {
 
     public Usuario obterUsuario(UUID id) throws UsuarioNotFoundException {
 
-        if (usuarioRepository.findById(id).isPresent()) {
-            return usuarioRepository.findById(id).get();
+        Optional<Usuario> usuario = usuarioRepository.findById(id);
+
+        if (usuario.isPresent()) {
+            return usuario.get();
         } else {
             throw new UsuarioNotFoundException(ExceptionMessages.USUARIO_NOT_FOUND);
         }
