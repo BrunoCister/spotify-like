@@ -2,7 +2,6 @@ package com.infnet.br.SpotifyLike.domain.conta;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.infnet.br.SpotifyLike.domain.exceptions.ExceptionMessages;
-import com.infnet.br.SpotifyLike.domain.exceptions.MusicaNotFoundException;
 import com.infnet.br.SpotifyLike.domain.exceptions.PlaylistNotFoundException;
 import com.infnet.br.SpotifyLike.domain.streaming.Musica;
 import com.infnet.br.SpotifyLike.domain.transacao.Assinatura;
@@ -10,7 +9,6 @@ import com.infnet.br.SpotifyLike.domain.transacao.Cartao;
 import com.infnet.br.SpotifyLike.domain.transacao.Plano;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.*;
 
@@ -81,23 +79,20 @@ public class Usuario {
 
         Optional<Playlist> playlist = this.playlists.stream().filter(p -> p.getNome().equals(nomePlaylistFavoritas)).findFirst();
         if (playlist.isPresent()){
-            if (!playlist.get().getNome().equals(nomePlaylistFavoritas)) {
-                throw new PlaylistNotFoundException(ExceptionMessages.PLAYLIST_NOT_FOUND);
-            }
             playlist.get().getMusicas().add(musica);
+        } else {
+            throw new PlaylistNotFoundException(ExceptionMessages.PLAYLIST_NOT_FOUND);
         }
     }
 
-    public void desfavoritarMusica(Musica musica) throws PlaylistNotFoundException, MusicaNotFoundException {
+    public void desfavoritarMusica(Musica musica) throws PlaylistNotFoundException {
 
         Optional<Playlist> playlist = this.playlists.stream().filter(p -> p.getNome().equals(nomePlaylistFavoritas)).findFirst();
         if (playlist.isPresent()){
-            if (!playlist.get().getNome().equals(nomePlaylistFavoritas)) {
-                throw new PlaylistNotFoundException(ExceptionMessages.PLAYLIST_NOT_FOUND);
-            }
-
             Optional<Musica> musicaFav = playlist.get().getMusicas().stream().filter(m -> m.getId().equals(musica.getId())).findFirst();
             musicaFav.ifPresent(value -> playlist.get().getMusicas().removeIf(m -> m.getId().equals(value.getId())));
+        } else {
+            throw new PlaylistNotFoundException(ExceptionMessages.PLAYLIST_NOT_FOUND);
         }
     }
 

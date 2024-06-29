@@ -2,6 +2,7 @@ package com.infnet.br.SpotifyLike.application;
 
 import com.infnet.br.SpotifyLike.application.conta.UsuarioService;
 import com.infnet.br.SpotifyLike.domain.conta.Usuario;
+import com.infnet.br.SpotifyLike.domain.streaming.Musica;
 import com.infnet.br.SpotifyLike.domain.transacao.Cartao;
 import com.infnet.br.SpotifyLike.domain.transacao.Plano;
 import com.infnet.br.SpotifyLike.repository.conta.UsuarioRepository;

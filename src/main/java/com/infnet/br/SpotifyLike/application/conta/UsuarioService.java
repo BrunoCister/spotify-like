@@ -10,7 +10,6 @@ import com.infnet.br.SpotifyLike.repository.streaming.MusicaRepository;
 import com.infnet.br.SpotifyLike.repository.transacao.PlanoRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +28,6 @@ public class UsuarioService {
     MusicaRepository musicaRepository;
     @Autowired
     EntityManager entityManager;
-    @Autowired
-    RabbitTemplate rabbitTemplate;
 
     @Transactional
     public Usuario criarConta(String nome, UUID planoId, Cartao cartao) throws Exception {
