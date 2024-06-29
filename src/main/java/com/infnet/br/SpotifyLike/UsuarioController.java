@@ -25,7 +25,7 @@ import java.util.UUID;
 public class UsuarioController {
 
     @Autowired
-    UsuarioService usuarioService;
+    private UsuarioService usuarioService;
 
     @PostMapping
     public ResponseEntity<UsuarioResponse> criar(@RequestBody UsuarioRequest usuarioRequest) throws Exception {
@@ -44,15 +44,15 @@ public class UsuarioController {
 
         UsuarioResponse usuarioResponse = usuarioParaResponse(usuarioCriado);
 
-        if (usuarioRequest != null) {
-            return new ResponseEntity<>(usuarioResponse, HttpStatus.CREATED);
-        } else {
+        if (usuarioResponse.getId() == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(usuarioResponse, HttpStatus.CREATED);
         }
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<UsuarioResponse> obter(@PathVariable UUID id) throws AssinaturaNotActiveException {
+    public ResponseEntity<UsuarioResponse> obter(@PathVariable UUID id) throws AssinaturaNotActiveException, UsuarioNotFoundException {
 
         Usuario usuario = this.usuarioService.obterUsuario(id);
 

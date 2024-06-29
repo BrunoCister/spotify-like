@@ -21,20 +21,20 @@ import java.util.UUID;
 public class UsuarioService {
 
     @Autowired
-    UsuarioRepository usuarioRepository;
+    private UsuarioRepository usuarioRepository;
     @Autowired
-    PlanoRepository planoRepository;
+    private PlanoRepository planoRepository;
     @Autowired
-    MusicaRepository musicaRepository;
+    private MusicaRepository musicaRepository;
     @Autowired
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Transactional
     public Usuario criarConta(String nome, UUID planoId, Cartao cartao) throws Exception {
 
         Plano plano = this.planoRepository.getReferenceById(planoId);
 
-        if (plano == null) {
+        if (plano.getId() == null) {
             throw new PlanoNotFoundException(ExceptionMessages.PLANO_NOT_FOUND);
         }
 
@@ -53,15 +53,19 @@ public class UsuarioService {
 
     }
 
-    public Usuario obterUsuario(UUID id) {
+    public Usuario obterUsuario(UUID id) throws UsuarioNotFoundException {
 
-        return this.usuarioRepository.findById(id).get();
+        if (usuarioRepository.findById(id).isPresent()) {
+            return usuarioRepository.findById(id).get();
+        } else {
+            throw new UsuarioNotFoundException(ExceptionMessages.USUARIO_NOT_FOUND);
+        }
     }
 
     public void favoritarMusica(UUID idUsuario, UUID idMusica) throws UsuarioNotFoundException, PlaylistNotFoundException, MusicaNotFoundException, IOException, URISyntaxException, InterruptedException {
 
         Usuario usuario = this.usuarioRepository.getReferenceById(idUsuario);
-        if (usuario == null) {
+        if (usuario.getId() == null) {
             throw new UsuarioNotFoundException(ExceptionMessages.USUARIO_NOT_FOUND);
         }
 
@@ -75,7 +79,7 @@ public class UsuarioService {
     public void desfavoritarMusica(UUID idUsuario, UUID idMusica) throws UsuarioNotFoundException, MusicaNotFoundException, IOException, URISyntaxException, InterruptedException, PlaylistNotFoundException {
 
         Usuario usuario = this.usuarioRepository.getReferenceById(idUsuario);
-        if (usuario == null) {
+        if (usuario.getId() == null) {
             throw new UsuarioNotFoundException(ExceptionMessages.USUARIO_NOT_FOUND);
         }
 
