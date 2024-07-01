@@ -19,6 +19,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        shell: bash
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up JDK 21
@@ -29,3 +33,16 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+    - name: Docker Login
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{secrets.REGISTRY_LOGIN_SERVER}}
+        username: ${{secrets.REGISTRY_USERNAME}}
+        password: ${{secrets.REGISTRY_PASSWORD}}
+    - name: Build image and push
+      uses: docker/build-push-action@v5
+      with:
+        push: true
+        tags: ${{secrets.REGISTRY_LOGIN_SERVER}}/spotify-like:${{github.sha}}
+        file: dockerfile
+        context: .
