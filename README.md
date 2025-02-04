@@ -6,6 +6,7 @@
 ### Tecnologias 🛠️
 
 - Java
+- Spring
 - JUnit para testes
 - Banco de dados H2
 - SonarCloud
